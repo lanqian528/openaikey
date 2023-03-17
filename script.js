@@ -24,8 +24,8 @@ function displayResult(result) {
     totalGrantedElement.innerText = result.total_granted;
     totalUsedElement.innerText = result.total_used;
     totalAvailableElement.innerText = result.total_available;
-    effectiveAtElement.innerText = formatDate(result.grants.data[0].effective_at) + ' 开始';
-    expiresAtElement.innerText = formatDate(result.grants.data[0].expires_at) + ' 结束';
+    effectiveAtElement.innerText = formatDate(result.grants.data[0].effective_at);
+    expiresAtElement.innerText = formatDate(result.grants.data[0].expires_at);
 
     const resultSection = document.getElementById('resultSection');
     resultSection.style.display = 'block';
@@ -36,10 +36,7 @@ function formatDate(timestamp) {
     const year = date.getFullYear();
     const month = addLeadingZero(date.getMonth() + 1);
     const day = addLeadingZero(date.getDate());
-    const hour = addLeadingZero(date.getHours());
-    const minute = addLeadingZero(date.getMinutes());
-    const second = addLeadingZero(date.getSeconds());
-    return `${year}-${month}-${day} ${hour}:${minute}:${second}`;
+    return `${year}-${month}-${day}`;
 }
 
 function addLeadingZero(number) {

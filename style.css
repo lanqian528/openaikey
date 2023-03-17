@@ -15,8 +15,8 @@ body {
 }
 
 input[type=text] {
+    vertical-align: middle;
     padding: 10px;
-    margin-top: 100px;
     border-radius: 20px;
     border: 1px solid #ccc;
     width: 400px;
@@ -27,6 +27,7 @@ input[type=text] {
 }
 
 button {
+    vertical-align: middle;
     background-color: #2b985b;
     color: white;
     height: 60px;

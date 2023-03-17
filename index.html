@@ -8,9 +8,19 @@
 <body>
 <div class="container">
   <h1>API-KEY 信息查询页面</h1>
+  <div>
+    <label for="apiUrlInput"></label>
+    <select id="apiUrlInput">
+      <option value="https://openai.1rmb.tk">
+        【社区反代】 https://openai.lan-qian.top
+      </option>
+      <option value="https://api.openai.com">
+        【官方,需科学】 https://api.openai.com
+      </option>
+    </select>
+  </div>
   <div class="input">
-    <input type="text" id="apiKeyInput" placeholder="YOUR_KEY">
-    <button onclick="sendCurlRequest()">发送请求</button>
+    <input type="text" id="apiKeyInput" placeholder="请输入要查询的APIKEY">
   </div>
   <div class="result" id="resultSection">
     <table>
@@ -30,6 +40,10 @@
       </tr>
     </table>
   </div>
+  <div class="error" id="errorSection" style="display: none">
+    <p id="errorMessage"></p>
+  </div>
+  <button onclick="sendCurlRequest()">查询</button>
 </div>
 
 <script src="script.js"></script>

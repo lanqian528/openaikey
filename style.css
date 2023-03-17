@@ -14,7 +14,27 @@ body {
     margin: 20px;
 }
 
+select {
+    margin: 20px;
+    vertical-align: middle;
+    padding: 10px;
+    border-radius: 20px;
+    border: 1px solid #ccc;
+    width: 400px;
+    height: 60px;
+    font-size: 16px;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
+}
+
+option {
+    font-size: 18px;
+    color: #333;
+    position: relative;
+}
+
 input[type=text] {
+    margin: 20px;
     vertical-align: middle;
     padding: 10px;
     border-radius: 20px;
@@ -31,25 +51,36 @@ button {
     background-color: #2b985b;
     color: white;
     height: 60px;
+    width: 100px;
     border-radius: 20px;
-    font-size: 16px;
+    font-size: 18px;
     border: none;
     margin: 20px;
-    padding: 10px 20px;
     cursor: pointer;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
 }
 
 .result {
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    display: none;
+}
+
+.error {
+    margin: 40px;
+    background-color: #ffb6c1;
+    padding: 20px;
+    border-radius: 20px;
+    max-width: 600px;
+    text-align: center;
+    color: #800000;
+    font-weight: bold;
 }
 
 table {
-    margin-top: 40px;
-    width: 100%;
+    margin: 40px;
     max-width: 600px;
+    min-width: 600px;
     border-collapse: collapse;
     border-radius: 20px;
     overflow: hidden;
@@ -70,5 +101,5 @@ th, td {
 th {
     background-color: #eee;
     font-weight: bold;
-    width: 200px;
+    width: auto;
 }

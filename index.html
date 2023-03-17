@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>查询页面</title>
+    <style>
+      body {
+        background-color: #2F4F4F;
+        font-family: Arial, sans-serif;
+        text-align: center;
+      }
+      input[type=text] {
+        padding: 10px;
+        margin: 10px;
+        border-radius: 20px;
+        border: none;
+        width: 300px;
+      }
+      button {
+        background-color: #FF8C00;
+        color: white;
+        border-radius: 20px;
+        border: none;
+        padding: 10px 20px;
+        cursor: pointer;
+      }
+      .result {
+        margin-top: 50px;
+        background-color: #F5DEB3;
+        padding: 20px;
+        border-radius: 20px;
+        max-width: 600px;
+        margin-left: auto;
+        margin-right: auto;
+        text-align: left;
+      }
+      .label {
+        font-weight: bold;
+        margin-bottom: 5px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>API-KEY 信息查询页面</h1>
+    <input type="text" id="apiUrlInput" placeholder="API链接     默认 https://api.openai.com">
+    <input type="text" id="apiKeyInput" placeholder="YOUR_KEY">
+    <button onclick="sendCurlRequest()">发送请求</button>
+    <div class="result" id="resultSection" style="display: none;">
+      <p class="label">总额度：</p>
+      <p class="value" id="totalGranted"></p>
+      <p class="label">已使用：</p>
+      <p class="value" id="totalUsed"></p>
+      <p class="label">剩余额度：</p>
+      <p class="value" id="totalAvailable"></p>
+      <p class="label">有效期起：</p>
+      <p class="value" id="effectiveAt"></p>
+      <p class="label">有效期止：</p>
+      <p class="value" id="expiresAt"></p>
+    </div>
+    <script>
+      function sendCurlRequest() {
+        const apiUrl = document.getElementById('apiUrlInput').value || 'https://api.openai.com/';
+        const apiKey = document.getElementById('apiKeyInput').value;
+        const url = `${apiUrl}/dashboard/billing/credit_grants`;
+        const options = {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${apiKey}`
+          }
+        };
+        fetch(url, options)
+          .then(response => response.json())
+          .then(responseJson => displayResult(responseJson))
+          .catch(error => console.error(error));
+      }
+
+      function displayResult(result) {
+        const totalGrantedElement = document.getElementById('totalGranted');
+        const totalUsedElement = document.getElementById('totalUsed');
+        const totalAvailableElement = document.getElementById('totalAvailable');
+        const effectiveAtElement = document.getElementById('effectiveAt');
+        const expiresAtElement = document.getElementById('expiresAt');
+
+        totalGrantedElement.innerText = result.total_granted;
+        totalUsedElement.innerText = result.total_used;
+        totalAvailableElement.innerText = result.total_available;
+        effectiveAtElement.innerText = '从 ' + formatDate(result.grants.data[0].effective_at) + ' 开始';
+        expiresAtElement.innerText = '到 ' + formatDate(result.grants.data[0].expires_at) + ' 结束';
+
+        const resultSection = document.getElementById('resultSection');
+        resultSection.style.display = 'block';
+      }
+
+      function formatDate(timestamp) {
+        const date = new Date(timestamp * 1000);
+        const year = date.getFullYear();
+        const month = addLeadingZero(date.getMonth() + 1);
+        const day = addLeadingZero(date.getDate());
+        const hour = addLeadingZero(date.getHours());
+        const minute = addLeadingZero(date.getMinutes());
+        const second = addLeadingZero(date.getSeconds());
+        return `${year}-${month}-${day} ${hour}:${minute}:${second}`;
+      }
+
+      function addLeadingZero(number) {
+        return number < 10 ? '0' + number : number;
+      }
+    </script>
+  </body>
+</html>

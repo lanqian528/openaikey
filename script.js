@@ -3,9 +3,7 @@ const errorSection = document.getElementById("errorSection");
 let timeoutId;
 
 function sendCurlRequest() {
-    const apiUrlSelect = document.getElementById("apiUrlInput");
-    const apiUrl =
-        apiUrlSelect.value === "custom" ? apiUrlCustom : apiUrlSelect.value;
+    const apiUrl = document.getElementById("apiUrlInput").value;
     const apiKey = document.getElementById("apiKeyInput").value;
     const url = `${apiUrl}/dashboard/billing/credit_grants`;
 
@@ -53,7 +51,6 @@ function displayResult(result) {
     effectiveAtElement.innerText = formatDate(result.grants.data[0].effective_at);
     expiresAtElement.innerText = formatDate(result.grants.data[0].expires_at);
 
-    const resultSection = document.getElementById('resultSection');
     resultSection.style.display = 'block';
     errorSection.style.display = "none";
 }
@@ -72,7 +69,7 @@ function displayError(error) {
         errorMessageElement.innerText =
             "API链接无响应，请检查其有效性或网络情况";
     }
-    console.log("111")
+    
     resultSection.style.display = "none";
     errorSection.style.display = "block";
 }

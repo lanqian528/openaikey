@@ -80,8 +80,8 @@ button {
 
 table {
     margin: 40px;
-    max-width: 600px;
-    min-width: 600px;
+    max-width: 500px;
+    min-width: 500px;
     border-collapse: collapse;
     border-radius: 20px;
     overflow: hidden;

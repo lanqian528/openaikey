@@ -5,7 +5,10 @@ let timeoutId;
 function sendCurlRequest() {
     const apiUrl = document.getElementById("apiUrlInput").value;
     const apiKey = document.getElementById("apiKeyInput").value;
-    const url = `${apiUrl}/dashboard/billing/credit_grants`;
+    const data = `?end_date=2023-05-01&start_date=2023-02-01`;
+    const usage = `${apiUrl}/dashboard/billing/usage${data}`;
+    const subscription = `${apiUrl}/dashboard/billing/subscription`;
+
 
     if (!apiUrl) {
         alert("请设置API链接");
@@ -18,7 +21,7 @@ function sendCurlRequest() {
     const options = {
         method: "GET",
         headers: {
-            Authorization: `Bearer ${apiKey}`
+            Authorization: `Bearer ${apiKey}`,
         }
     };
 
@@ -26,8 +29,8 @@ function sendCurlRequest() {
         displayError(new Error("API链接无响应，请检查其有效性或网络情况"));
     }, 5000);
 
-    fetch(url, options)
-        .then((response) => {
+    const request1 = fetch(usage, options)
+        .then(response => {
             clearTimeout(timeoutId);
             if (!response.ok) {
                 return response.json().then((error) => {
@@ -35,21 +38,28 @@ function sendCurlRequest() {
                 });
             }
             return response.json();
-        })
-        .then((responseJson) => displayResult(responseJson))
-}
+        });
+    const request2 = fetch(subscription, options)
+        .then(response => response.json());
+    Promise.all([request1, request2])
+        .then(([json_data1, json_data2]) => {
+            displayResult(json_data1, json_data2);
+        });
+ }
 
-function displayResult(result) {
+function displayResult(usage, subscription) {
     const totalGrantedElement = document.getElementById('totalGranted');
     const totalUsedElement = document.getElementById('totalUsed');
     const totalAvailableElement = document.getElementById('totalAvailable');
-    const effectiveAtElement = document.getElementById('effectiveAt');
-    const expiresAtElement = document.getElementById('expiresAt');
-    totalGrantedElement.innerText = result.total_granted;
-    totalUsedElement.innerText = result.total_used;
-    totalAvailableElement.innerText = result.total_available;
-    effectiveAtElement.innerText = formatDate(result.grants.data[0].effective_at);
-    expiresAtElement.innerText = formatDate(result.grants.data[0].expires_at);
+    // const effectiveAtElement = document.getElementById('effectiveAt');
+    // const expiresAtElement = document.getElementById('expiresAt');
+    const totalUsed = (usage.total_usage / 100).toFixed(4);
+    const total = subscription.hard_limit_usd.toFixed(4);
+    totalGrantedElement.innerText = total;
+    totalUsedElement.innerText = totalUsed;
+    totalAvailableElement.innerText = (total - totalUsed).toFixed(4);
+    // effectiveAtElement.innerText = formatDate(result.grants.data[0].effective_at);
+    // expiresAtElement.innerText = formatDate(result.grants.data[0].expires_at);
 
     resultSection.style.display = 'block';
     errorSection.style.display = "none";
@@ -69,7 +79,7 @@ function displayError(error) {
         errorMessageElement.innerText =
             "API链接无响应，请检查其有效性或网络情况";
     }
-    
+
     resultSection.style.display = "none";
     errorSection.style.display = "block";
 }

@@ -52,14 +52,14 @@ function displayResult(usage, subscription) {
     const totalUsedElement = document.getElementById('totalUsed');
     const totalAvailableElement = document.getElementById('totalAvailable');
     // const effectiveAtElement = document.getElementById('effectiveAt');
-    // const expiresAtElement = document.getElementById('expiresAt');
+    const expiresAtElement = document.getElementById('expiresAt');
     const totalUsed = (usage.total_usage / 100).toFixed(4);
     const total = subscription.hard_limit_usd.toFixed(4);
     totalGrantedElement.innerText = total;
     totalUsedElement.innerText = totalUsed;
     totalAvailableElement.innerText = (total - totalUsed).toFixed(4);
     // effectiveAtElement.innerText = formatDate(result.grants.data[0].effective_at);
-    // expiresAtElement.innerText = formatDate(result.grants.data[0].expires_at);
+    expiresAtElement.innerText = formatDate(subscription.access_until);
 
     resultSection.style.display = 'block';
     errorSection.style.display = "none";
@@ -70,11 +70,11 @@ function displayError(error) {
     const errorMessageElement = document.getElementById("errorMessage");
     if (error.name === "AbortError") {
         errorMessageElement.innerText =
-            "API链接无响应，请检查其有效性或网络情况";
+            "API链接无响应，请检查其有效性或网络情况然后重试";
     } else if (error.message.includes("Incorrect API key provided")) {
         errorMessageElement.innerText = "请检查API-KEY是否正确";
     }else if (error.message.includes("This key is")) {
-        errorMessageElement.innerText = "您的openai账号已被封禁";
+        errorMessageElement.innerText = "该openai账号已被封禁";
     } else {
         errorMessageElement.innerText =
             "API链接无响应，请检查其有效性或网络情况";

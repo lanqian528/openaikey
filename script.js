@@ -1,23 +1,27 @@
-const resultSection = document.getElementById("resultSection");
-const errorSection = document.getElementById("errorSection");
-let timeoutId;
+const resultTable = document.getElementById("resultTable");
 
-function sendCurlRequest() {
+function sendCurlRequests() {
     const apiUrl = document.getElementById("apiUrlInput").value;
-    const apiKey = document.getElementById("apiKeyInput").value;
-    const data = `?end_date=2023-05-01&start_date=2023-02-01`;
+    const apiKeys = document.getElementById("apiKeyInput").value.split('\n');
+    if (!/^sk-.*/.test(apiKeys[apiKeys.length - 1].trim())) {
+        apiKeys.pop();
+    }
+    apiKeys.forEach((apiKey, index) => {
+        // 创建新行并预填充数据
+        const row = resultTable.insertRow(-1);
+        for(let i = 0; i < 5; i++){
+            const cell = row.insertCell(-1);
+            cell.innerText = i === 0 ? apiKey : '查询中...';
+        }
+        sendCurlRequest(apiUrl, apiKey.trim(), index+1);
+    });
+}
+
+function sendCurlRequest(apiUrl, apiKey, rowIndex) {
+    const data = `?end_date=2023-06-01&start_date=2023-04-01`;
     const usage = `${apiUrl}/dashboard/billing/usage${data}`;
     const subscription = `${apiUrl}/dashboard/billing/subscription`;
 
-
-    if (!apiUrl) {
-        alert("请设置API链接");
-        return;
-    }
-    if (!apiKey) {
-        alert("请填写API KEY");
-        return;
-    }
     const options = {
         method: "GET",
         headers: {
@@ -25,16 +29,11 @@ function sendCurlRequest() {
         }
     };
 
-    timeoutId = setTimeout(() => {
-        displayError(new Error("API链接无响应，请检查其有效性或网络情况"));
-    }, 5000);
-
     const request1 = fetch(usage, options)
         .then(response => {
-            clearTimeout(timeoutId);
             if (!response.ok) {
                 return response.json().then((error) => {
-                    displayError(error.error);
+                    throw new Error(error.error.message);
                 });
             }
             return response.json();
@@ -43,46 +42,47 @@ function sendCurlRequest() {
         .then(response => response.json());
     Promise.all([request1, request2])
         .then(([json_data1, json_data2]) => {
-            displayResult(json_data1, json_data2);
+            displayResult(rowIndex, apiKey, json_data1, json_data2);
+        })
+        .catch(error => {
+            displayError(rowIndex, error);
         });
- }
+}
 
-function displayResult(usage, subscription) {
-    const totalGrantedElement = document.getElementById('totalGranted');
-    const totalUsedElement = document.getElementById('totalUsed');
-    const totalAvailableElement = document.getElementById('totalAvailable');
-    // const effectiveAtElement = document.getElementById('effectiveAt');
-    const expiresAtElement = document.getElementById('expiresAt');
+function displayResult(rowIndex, apiKey, usage, subscription) {
+    const row = resultTable.rows[rowIndex];
     const totalUsed = (usage.total_usage / 100).toFixed(4);
     const total = subscription.hard_limit_usd.toFixed(4);
-    totalGrantedElement.innerText = total;
-    totalUsedElement.innerText = totalUsed;
-    totalAvailableElement.innerText = (total - totalUsed).toFixed(4);
-    // effectiveAtElement.innerText = formatDate(result.grants.data[0].effective_at);
-    expiresAtElement.innerText = formatDate(subscription.access_until);
+    const totalAvailable = (total - totalUsed).toFixed(4);
+    const expiresAt = formatDate(subscription.access_until);
 
-    resultSection.style.display = 'block';
-    errorSection.style.display = "none";
+    [apiKey, total, totalUsed, totalAvailable, expiresAt].forEach((text, index) => {
+        row.cells[index].innerText = text;
+    });
 }
 
-function displayError(error) {
-    clearTimeout(timeoutId);
-    const errorMessageElement = document.getElementById("errorMessage");
+function displayError(rowIndex, error) {
+    const row = resultTable.rows[rowIndex];
+    const apiKey = row.cells[0].innerText;
+    let errorMessage = "";
+
     if (error.name === "AbortError") {
-        errorMessageElement.innerText =
-            "API链接无响应，请检查其有效性或网络情况然后重试";
+        errorMessage = "API链接无响应，请检查其有效性或网络情况然后重试";
     } else if (error.message.includes("Incorrect API key provided")) {
-        errorMessageElement.innerText = "请检查API-KEY是否正确";
+        errorMessage = "请检查API-KEY是否正确";
     }else if (error.message.includes("This key is")) {
-        errorMessageElement.innerText = "该openai账号已被封禁";
+        errorMessage = "该openai账号已被封禁";
     } else {
-        errorMessageElement.innerText =
-            "API链接无响应，请检查其有效性或网络情况";
+        errorMessage = "API链接无响应，请检查其有效性或网络情况";
     }
 
-    resultSection.style.display = "none";
-    errorSection.style.display = "block";
+    row.cells[0].innerText = apiKey;
+    row.cells[1].innerText = errorMessage;
+    for (let i = 2; i < row.cells.length; i++) {
+        row.cells[i].innerText = "";
+    }
 }
+
 
 function formatDate(timestamp) {
     const date = new Date(timestamp * 1000);
@@ -95,3 +95,4 @@ function formatDate(timestamp) {
 function addLeadingZero(number) {
     return number < 10 ? '0' + number : number;
 }
+

@@ -1,6 +1,10 @@
 const resultTable = document.getElementById("resultTable");
 
 function sendCurlRequests() {
+    // 删除已存在的表格行，保留标题行（假设标题行是第一行）
+    while (resultTable.rows.length > 1) {
+        resultTable.deleteRow(1);
+    }
     const apiUrl = document.getElementById("apiUrlInput").value;
     const apiKeys = document.getElementById("apiKeyInput").value.split('\n');
     if (!/^sk-.*/.test(apiKeys[apiKeys.length - 1].trim())) {

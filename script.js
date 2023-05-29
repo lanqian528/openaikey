@@ -1,30 +1,44 @@
 const resultTable = document.getElementById("resultTable");
 
+
 function sendCurlRequests() {
-    // 删除已存在的表格行，保留标题行（假设标题行是第一行）
     while (resultTable.rows.length > 1) {
         resultTable.deleteRow(1);
     }
     const apiUrl = document.getElementById("apiUrlInput").value;
-    const apiKeys = document.getElementById("apiKeyInput").value.split('\n');
-    if (!/^sk-.*/.test(apiKeys[apiKeys.length - 1].trim())) {
-        apiKeys.pop();
-    }
+    const text = document.getElementById("apiKeyInput").value;
+    const apiKeys = text.match(/sk-[A-Za-z0-9]{48}/g);
     apiKeys.forEach((apiKey, index) => {
-        // 创建新行并预填充数据
         const row = resultTable.insertRow(-1);
-        for(let i = 0; i < 5; i++){
+        sendCurlRequest(apiUrl, apiKey.trim(), index+1);
+        const showFullApiKey = document.getElementById("showFullApiKey").checked;
+        if (!showFullApiKey) {
+            apiKey = apiKey.slice(0, 6) + '****' + apiKey.slice(-6);
+        }
+        for(let i = 0; i < 7; i++){  // 修改为7个单元格
             const cell = row.insertCell(-1);
             cell.innerText = i === 0 ? apiKey : '查询中...';
         }
-        sendCurlRequest(apiUrl, apiKey.trim(), index+1);
     });
 }
 
+function getDateRange() {
+    const currentDate = new Date();
+    const twoMonthsAgo = new Date();
+
+    twoMonthsAgo.setMonth(currentDate.getMonth() - 2);
+
+    const start_date = twoMonthsAgo.toISOString().slice(0, 10);
+    const end_date = currentDate.toISOString().slice(0, 10);
+
+    return `?end_date=${end_date}&start_date=${start_date}`;
+}
+
 function sendCurlRequest(apiUrl, apiKey, rowIndex) {
-    const data = `?end_date=2023-06-01&start_date=2023-04-01`;
+    const data = getDateRange();
     const usage = `${apiUrl}/dashboard/billing/usage${data}`;
     const subscription = `${apiUrl}/dashboard/billing/subscription`;
+    const modelsUrl = `${apiUrl}/v1/models`;
 
     const options = {
         method: "GET",
@@ -44,23 +58,37 @@ function sendCurlRequest(apiUrl, apiKey, rowIndex) {
         });
     const request2 = fetch(subscription, options)
         .then(response => response.json());
-    Promise.all([request1, request2])
-        .then(([json_data1, json_data2]) => {
-            displayResult(rowIndex, apiKey, json_data1, json_data2);
+
+    const request3 = fetch(modelsUrl, options)
+        .then(response => response.json());
+
+    Promise.all([request1, request2, request3])
+        .then(([json_data1, json_data2, json_data3]) => {
+            displayResult(rowIndex, apiKey, json_data1, json_data2, json_data3);
         })
         .catch(error => {
             displayError(rowIndex, error);
         });
 }
 
-function displayResult(rowIndex, apiKey, usage, subscription) {
+function displayResult(rowIndex, apiKey, usage, subscription, models) {
     const row = resultTable.rows[rowIndex];
     const totalUsed = (usage.total_usage / 100).toFixed(4);
     const total = subscription.hard_limit_usd.toFixed(4);
     const totalAvailable = (total - totalUsed).toFixed(4);
     const expiresAt = formatDate(subscription.access_until);
-
-    [apiKey, total, totalUsed, totalAvailable, expiresAt].forEach((text, index) => {
+    const hasPaymentMethod = subscription.has_payment_method ? '是' : '否'; // 新的数据
+    const showFullApiKey = document.getElementById("showFullApiKey").checked;
+    let availableModel = 'GPT3.5';
+    models.data.forEach((model) => {
+        if (model.id.includes('gpt-4')) {
+            availableModel = 'GPT4';
+        }
+    });
+    if (!showFullApiKey) {
+        apiKey = apiKey.slice(0, 6) + '****' + apiKey.slice(-6);
+    }
+    [apiKey, total, totalUsed, totalAvailable, expiresAt, hasPaymentMethod, availableModel].forEach((text, index) => {
         row.cells[index].innerText = text;
     });
 }

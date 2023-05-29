@@ -26,6 +26,10 @@
     <div class="input">
       <textarea id="apiKeyInput" placeholder="请输入要查询的APIKEY，每行一个"></textarea>
     </div>
+    <div>
+      <input type="checkbox" id="showFullApiKey" />
+      <label for="showFullApiKey">显示完整API KEY</label>
+    </div>
     <button onclick="sendCurlRequests()">查询</button>
     <div class="error" id="errorSection" style="display: none">
       <p id="errorMessage"></p>
@@ -41,6 +45,8 @@
             <th>已用额度</th>
             <th>剩余额度</th>
             <th>到期时间</th>
+            <th>是否绑卡</th>
+            <th>可用模型</th>
           </tr>
         </table>
       </div>

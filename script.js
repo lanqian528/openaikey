@@ -7,7 +7,7 @@ function sendCurlRequests() {
     }
     const apiUrl = document.getElementById("apiUrlInput").value;
     const text = document.getElementById("apiKeyInput").value;
-    const apiKeys = text.match(/sk-[A-Za-z0-9]{48}/g);
+    const apiKeys = text.match(/sk-[A-Za-z0-9]{10,48}/g);
     apiKeys.forEach((apiKey, index) => {
         const row = resultTable.insertRow(-1);
         sendCurlRequest(apiUrl, apiKey.trim(), index+1);

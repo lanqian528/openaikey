@@ -24,12 +24,14 @@ function sendCurlRequests() {
 
 function getDateRange() {
     const currentDate = new Date();
-    const twoMonthsAgo = new Date();
+    const startDate = new Date();
+    const endDate = new Date();
 
-    twoMonthsAgo.setMonth(currentDate.getMonth() - 2);
+    startDate.setDate(currentDate.getDate() - 99);
+    endDate.setDate(currentDate.getDate() + 1);
 
-    const start_date = twoMonthsAgo.toISOString().slice(0, 10);
-    const end_date = currentDate.toISOString().slice(0, 10);
+    const start_date = startDate.toISOString().slice(0, 10);
+    const end_date = endDate.toISOString().slice(0, 10);
 
     return `?end_date=${end_date}&start_date=${start_date}`;
 }

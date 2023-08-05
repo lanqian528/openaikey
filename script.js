@@ -82,10 +82,10 @@ function displayResult(rowIndex, apiKey, usage, subscription, models) {
     const expiresAt = formatDate(subscription.access_until);
     const hasPaymentMethod = subscription.has_payment_method ? '✔️' : '❌'; // 新的数据
     const showFullApiKey = document.getElementById("showFullApiKey").checked;
-    let availableModel = 'GPT3.5';
+    let availableModel = '❌';
     models.data.forEach((model) => {
         if (model.id.includes('gpt-4')) {
-            availableModel = 'GPT4';
+            availableModel = '✔️';
         }
     });
     if (!showFullApiKey) {

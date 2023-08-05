@@ -1,7 +1,6 @@
 const resultTable = document.getElementById("resultTable");
 
 const cells_num = 7;
-// const cells_num = 2;
 
 function sendCurlRequests() {
     while (resultTable.rows.length > 1) {
@@ -81,7 +80,7 @@ function displayResult(rowIndex, apiKey, usage, subscription, models) {
     const total = subscription.hard_limit_usd.toFixed(4);
     const totalAvailable = (total - totalUsed).toFixed(4);
     const expiresAt = formatDate(subscription.access_until);
-    const hasPaymentMethod = subscription.has_payment_method ? '是' : '否'; // 新的数据
+    const hasPaymentMethod = subscription.has_payment_method ? '✔️' : '❌'; // 新的数据
     const showFullApiKey = document.getElementById("showFullApiKey").checked;
     let availableModel = 'GPT3.5';
     models.data.forEach((model) => {
@@ -102,7 +101,7 @@ function displayError(rowIndex, error) {
     const apiKey = row.cells[0].innerText;
 
     if (error.message.includes("must be made with a session key")) {
-        errorMessage = "api可用";
+        errorMessage = "✔️";
     } else if (error.message.includes("Incorrect API key provided")) {
         errorMessage = "api-key错误，请检查其有效性";
     } else if (error.message.includes("This key is")) {
@@ -119,7 +118,6 @@ function displayError(rowIndex, error) {
         }
     }
 }
-
 
 function formatDate(timestamp) {
     const date = new Date(timestamp * 1000);

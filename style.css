@@ -3,10 +3,10 @@ body {
     font-family: Arial, sans-serif;
 }
 
-.container{
+.container {
     display: flex;
     justify-content: space-between;
-    padding: 20px;
+    padding: 15px;
     box-sizing: border-box;
     height: 100vh;
 }
@@ -36,7 +36,9 @@ body {
 table {
     margin: 40px auto;
     min-width: 100%;
-    border-collapse: collapse;
+    border: 0;
+    /*border-collapse: collapse;*/
+    /*border-spacing: 0;*/
     border-radius: 20px;
     overflow: hidden;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0);
@@ -47,7 +49,7 @@ select {
     padding: 10px;
     border-radius: 20px;
     border: 1px solid #ccc;
-    width: 400px;
+    width: 350px;
     height: 60px;
     font-size: 16px;
     background-color: #fff;
@@ -61,11 +63,11 @@ option {
 }
 
 button {
-    background-color: #2b985b;
+    background-color: #34b76e;
     color: white;
-    height: 60px;
-    width: 100px;
-    border-radius: 20px;
+    height: 40px;
+    width: 80px;
+    border-radius: 10px;
     font-size: 18px;
     border: none;
     margin: 20px;
@@ -74,26 +76,37 @@ button {
 }
 
 
-tbody{
-    background-color: #ffffff;
-    height: 40px;
+tbody {
+    height: auto;
 }
 
-th, td {
+td {
+    border: 1px solid #eee;
     padding: 10px;
     height: 40px;
     width: auto;
     font-size: 16px;
 }
 
+tr:last-child td:first-child {
+    border-bottom-left-radius: 20px;
+}
+
+tr:last-child td:last-child {
+    border-bottom-right-radius: 20px;
+}
+
 th {
     background-color: #eee;
     font-weight: bold;
     width: auto;
+    padding: 10px;
+    height: 40px;
+    font-size: 16px;
 }
 
 #apiKeyInput {
-    width: 400px;
+    width: 350px;
     height: 400px;
     padding: 10px;
     font-size: 14px;

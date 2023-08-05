@@ -98,13 +98,14 @@ function displayResult(rowIndex, apiKey, usage, subscription, models) {
 function displayError(rowIndex, error) {
     const row = resultTable.rows[rowIndex];
     const apiKey = row.cells[0].innerText;
-    let errorMessage = "";
 
     if (error.name === "AbortError") {
-        errorMessage = "API链接无响应，请检查其有效性或网络情况然后重试";
+        errorMessage = "API链接无响应，请检查其有效性或网络情况";
+    } else if (error.message.includes("must be made with a session key")) {
+        errorMessage = "API-KEY可用，但无法查询额度";
     } else if (error.message.includes("Incorrect API key provided")) {
-        errorMessage = "请检查API-KEY是否正确";
-    }else if (error.message.includes("This key is")) {
+        errorMessage = "API-KEY错误，请检查其有效性";
+    } else if (error.message.includes("This key is")) {
         errorMessage = "该openai账号已被封禁";
     } else {
         errorMessage = "API链接无响应，请检查其有效性或网络情况";

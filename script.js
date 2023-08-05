@@ -15,7 +15,7 @@ function sendCurlRequests() {
         sendCurlRequest(apiUrl, apiKey.trim(), index+1);
         const showFullApiKey = document.getElementById("showFullApiKey").checked;
         if (!showFullApiKey) {
-            apiKey = apiKey.slice(0, 6) + '****' + apiKey.slice(-6);
+            apiKey = apiKey.slice(0, 8) + '****' + apiKey.slice(-6);
         }
         for (let i = 0; i < cells_num; i++) {
             let cell = row.insertCell(-1);
@@ -90,7 +90,7 @@ function displayResult(rowIndex, apiKey, usage, subscription, models) {
         }
     });
     if (!showFullApiKey) {
-        apiKey = apiKey.slice(0, 6) + '****' + apiKey.slice(-6);
+        apiKey = apiKey.slice(0, 8) + '****' + apiKey.slice(-6);
     }
     [apiKey, total, totalUsed, totalAvailable, expiresAt, hasPaymentMethod, availableModel].forEach((text, index) => {
         row.cells[index].innerText = text;

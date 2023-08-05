@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="">
 <head>
   <meta charset="UTF-8">
   <title>查询页面</title>
@@ -8,8 +8,8 @@
 <body>
 <div class="container">
   <div class="left">
-    <h1>API-KEY 信息查询页面</h1>
-    <h3>(只能查询可用性，无法查询额度)</h3>
+    <h1>API 信息查询页面</h1>
+    <div>(使用apieky只能查询可用性，使用session可以查询额度)</div>
     <div>
       <label for="apiUrlInput"></label>
       <select id="apiUrlInput">
@@ -25,7 +25,8 @@
       </select>
     </div>
     <div class="input">
-      <textarea id="apiKeyInput" placeholder="请输入要查询的APIKEY，全部丢进来就行，自动识别，无视格式和数量"></textarea>
+      <label for="apiKeyInput"></label>
+      <textarea id="apiKeyInput" placeholder="请输入要查询的apikey或用session，全部丢进来就行，自动识别，无视格式和数量"></textarea>
     </div>
     <div>
       <input type="checkbox" id="showFullApiKey" />
@@ -41,7 +42,8 @@
       <div class="result" id="resultSection">
         <table id="resultTable">
           <tr>
-            <th>API KEY</th>
+            <th>api-key/session</th>
+<!--            <th>是否可用</th>-->
             <th>总额度</th>
             <th>已用额度</th>
             <th>剩余额度</th>

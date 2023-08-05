@@ -1,5 +1,7 @@
 const resultTable = document.getElementById("resultTable");
 
+const cells_num = 7;
+// const cells_num = 2;
 
 function sendCurlRequests() {
     while (resultTable.rows.length > 1) {
@@ -7,7 +9,7 @@ function sendCurlRequests() {
     }
     const apiUrl = document.getElementById("apiUrlInput").value;
     const text = document.getElementById("apiKeyInput").value;
-    const apiKeys = text.match(/sk-[A-Za-z0-9]{10,48}/g);
+    const apiKeys = text.match(/(sk-[A-Za-z0-9]{48}|sess-[A-Za-z0-9]{40})/g);
     apiKeys.forEach((apiKey, index) => {
         const row = resultTable.insertRow(-1);
         sendCurlRequest(apiUrl, apiKey.trim(), index+1);
@@ -15,8 +17,8 @@ function sendCurlRequests() {
         if (!showFullApiKey) {
             apiKey = apiKey.slice(0, 6) + '****' + apiKey.slice(-6);
         }
-        for(let i = 0; i < 7; i++){  // 修改为7个单元格
-            const cell = row.insertCell(-1);
+        for (let i = 0; i < cells_num; i++) {
+            let cell = row.insertCell(-1);
             cell.innerText = i === 0 ? apiKey : '查询中...';
         }
     });
@@ -99,22 +101,22 @@ function displayError(rowIndex, error) {
     const row = resultTable.rows[rowIndex];
     const apiKey = row.cells[0].innerText;
 
-    if (error.name === "AbortError") {
-        errorMessage = "API链接无响应，请检查其有效性或网络情况";
-    } else if (error.message.includes("must be made with a session key")) {
-        errorMessage = "API-KEY可用，但无法查询额度";
+    if (error.message.includes("must be made with a session key")) {
+        errorMessage = "api可用";
     } else if (error.message.includes("Incorrect API key provided")) {
-        errorMessage = "API-KEY错误，请检查其有效性";
+        errorMessage = "api-key错误，请检查其有效性";
     } else if (error.message.includes("This key is")) {
         errorMessage = "该openai账号已被封禁";
     } else {
-        errorMessage = "API链接无响应，请检查其有效性或网络情况";
+        errorMessage = "api请求无响应，请检查其有效性或网络情况";
     }
 
     row.cells[0].innerText = apiKey;
     row.cells[1].innerText = errorMessage;
     for (let i = 2; i < row.cells.length; i++) {
-        row.cells[i].innerText = "";
+        if(row.cells[i].innerText === "查询中..."){
+            row.cells[i].innerText = "";
+        }
     }
 }
 

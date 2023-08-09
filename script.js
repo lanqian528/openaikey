@@ -170,5 +170,3 @@ function get_sess_key(username, password) {
             throw new Error('Failed to login');
         });
 }
-
-

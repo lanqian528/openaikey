@@ -16,9 +16,6 @@
         <option value="https://openai.lan-qian.top">
           【自建反代】 https://openai.lan-qian.top
         </option>
-        <option value="https://one-api.lan-qian.top">
-          【特殊反代】 https://one-api.lan-qian.top
-        </option>
         <option value="https://api.openai.com">
           【官方,需科学】 https://api.openai.com
         </option>
@@ -27,12 +24,22 @@
     <div class="input">
       <label for="apiKeyInput"></label>
       <textarea id="apiKeyInput" placeholder="请输入要查询的apikey或用session，全部丢进来就行，自动识别，无视格式和数量(任何带有sk-或sess-的文本)"></textarea>
+      <div>
+        <input type="checkbox" id="showFullApiKey" />
+        <label for="showFullApiKey">显示完整API KEY</label>
+        <button onclick="sendCurlRequests()">查询api</button>
+      </div>
+      <div>
+        ----以下功能暂未实现----
+      </div>
+      <br>
+      <label for="userInput"></label>
+      <textarea id="userInput" placeholder="请输入账号密码，格式为：邮箱----密码（可多行）"></textarea>
     </div>
+
     <div>
-      <input type="checkbox" id="showFullApiKey" />
-      <label for="showFullApiKey">显示完整API KEY</label>
+      <button onclick="sendUserData()">获取sess</button>
     </div>
-    <button onclick="sendCurlRequests()">查询</button>
     <div class="error" id="errorSection" style="display: none">
       <p id="errorMessage"></p>
     </div>

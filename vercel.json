@@ -1,0 +1,8 @@
+{
+    "rewrites": [
+        {
+            "source": "/fakeopen/(.*)",
+            "destination": "/api/proxy"
+        }
+    ]
+}

@@ -66,7 +66,7 @@ button {
     background-color: #2e9f61;
     color: white;
     height: 40px;
-    width: 80px;
+    width: 100px;
     border-radius: 10px;
     font-size: 18px;
     border: none;
@@ -107,7 +107,15 @@ th {
 
 #apiKeyInput {
     width: 350px;
-    height: 400px;
+    height: 200px;
+    padding: 10px;
+    font-size: 14px;
+    border-radius: 20px;
+}
+
+#userInput {
+    width: 350px;
+    height: 150px;
     padding: 10px;
     font-size: 14px;
     border-radius: 20px;

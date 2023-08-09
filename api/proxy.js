@@ -5,7 +5,7 @@ module.exports = async (req, res) => {
     if (!req.url.startsWith(prefix)) {
         return;
     }
-    const targetUrl = "https://api.tms.im" + req.url.substring(prefix.length);
+    const targetUrl = "https://ai.fakeopen.com" + req.url.substring(prefix.length);
 
     try {
         const response = await axios({

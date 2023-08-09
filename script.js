@@ -157,7 +157,7 @@ function get_sess_key(username, password) {
         headers: {
             'Content-Type': 'application/json'
         },
-        data: JSON.stringify(data),
+        body: JSON.stringify(data),
     })
         .then(response => response.json())
         .then(responseData => {

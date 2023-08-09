@@ -1,17 +1,26 @@
-const request = require('request');
+const fetch = require('node-fetch');
 
-module.exports = (req, res) => {
-    // proxy middleware options
-    let prefix = "/fakeopen";
+module.exports = async (req, res) => {
+    const prefix = "/fakeopen";
     if (!req.url.startsWith(prefix)) {
         return;
     }
-    let target = "https://ai.fakeopen.com" + req.url.substring(prefix.length);
+    const targetUrl = "https://ai.fakeopen.com" + req.url.substring(prefix.length);
 
-    var options = {
-        'method': req.method,
-        'url': target,
-        'headers': req.headers
-    };
-    req.pipe(request(options)).pipe(res);
+    try {
+        const response = await fetch(targetUrl, {
+            method: req.method,
+            headers: req.headers,
+            body: req.body
+        });
+
+        const data = await response.text();
+
+        res.status(response.status);
+        res.setHeader('Content-Type', response.headers.get('content-type'));
+        res.send(data);
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Internal Server Error');
+    }
 };

@@ -131,42 +131,41 @@ function addLeadingZero(number) {
     return number < 10 ? '0' + number : number;
 }
 
-function sendUserData() {
-    const text = document.getElementById("userInput").value;
-    const lines = text.split('\n');
+// function sendUserData() {
+//     const text = document.getElementById("userInput").value;
+//     const lines = text.split('\n');
+//
+//     for (const line of lines) {
+//         const [username, password] = line.split('----');
+//         get_sess_key(username, password).then((sess_key) => {
+//             console.log('==================== 以下为账号SESS信息 ====================');
+//             console.log(username, password,sess_key);
+//         });
+//     }
+// }
 
-    for (const line of lines) {
-        const [username, password] = line.split('----');
-        get_sess_key(username, password).then((sess_key) => {
-            console.log('==================== 以下为账号SESS信息 ====================');
-            console.log(username, password,sess_key);
-        });
-    }
-
-}
-
-function get_sess_key(username, password) {
-    const data = {
-        username: username,
-        password: password,
-        prompt: 'login',
-    };
-
-    return fetch('/fakeopen/auth/platform/login', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(data),
-    })
-        .then(response => response.json())
-        .then(responseData => {
-            const sess_key = responseData.login_info.user.session.sensitive_id;
-            console.log(sess_key);
-            return sess_key;
-        })
-        .catch(error => {
-            console.error(error);
-            throw new Error('Failed to login');
-        });
-}
+// function get_sess_key(username, password) {
+//     const data = {
+//         username: username,
+//         password: password,
+//         prompt: 'login',
+//     };
+//
+//     return fetch('/fakeopen/auth/platform/login', {
+//         method: 'POST',
+//         headers: {
+//             'Content-Type': 'application/json'
+//         },
+//         body: JSON.stringify(data),
+//     })
+//         .then(response => response.json())
+//         .then(responseData => {
+//             const sess_key = responseData.login_info.user.session.sensitive_id;
+//             console.log(sess_key);
+//             return sess_key;
+//         })
+//         .catch(error => {
+//             console.error(error);
+//             throw new Error('Failed to login');
+//         });
+// }

@@ -1,6 +1,6 @@
 const resultTable = document.getElementById("resultTable");
 
-const cells_num = 7;
+const cells_num = 8;
 
 function sendCurlRequests() {
     while (resultTable.rows.length > 1) {
@@ -80,7 +80,8 @@ function displayResult(rowIndex, apiKey, usage, subscription, models) {
     const total = subscription.hard_limit_usd.toFixed(4);
     const totalAvailable = (total - totalUsed).toFixed(4);
     const expiresAt = formatDate(subscription.access_until);
-    const hasPaymentMethod = subscription.has_payment_method ? '✔️' : '❌'; // 新的数据
+    const hasPaymentMethod = subscription.has_payment_method ? '✔️' : '❌';
+    const isOldAccount = (subscription.billing_mechanism === "advance") || (!subscription.has_payment_method) ? '❌' : '✔️';
     const showFullApiKey = document.getElementById("showFullApiKey").checked;
     let availableModel = '❌';
     models.data.forEach((model) => {
@@ -91,7 +92,7 @@ function displayResult(rowIndex, apiKey, usage, subscription, models) {
     if (!showFullApiKey) {
         apiKey = apiKey.slice(0, 8) + '****' + apiKey.slice(-6);
     }
-    [apiKey, total, totalUsed, totalAvailable, expiresAt, hasPaymentMethod, availableModel].forEach((text, index) => {
+    [apiKey, total, totalUsed, totalAvailable, expiresAt, hasPaymentMethod, isOldAccount, availableModel].forEach((text, index) => {
         row.cells[index].innerText = text;
     });
 }

@@ -131,3 +131,17 @@ function formatDate(timestamp) {
 function addLeadingZero(number) {
     return number < 10 ? '0' + number : number;
 }
+
+function getApiKey() {
+    const inputText = document.getElementById("apiKeyInput").value;
+    const regex = /sk-[A-Za-z0-9]{48}/g;
+    const matches = inputText.match(regex);
+    if(matches) {
+        const outputText = matches.join('\n');
+        const blob = new Blob([outputText], {type: 'text/plain'});
+        const a = document.createElement('a');
+        a.download = new Date().toISOString() + '-apikey.txt';
+        a.href = URL.createObjectURL(blob);
+        a.click();
+    }
+}

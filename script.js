@@ -138,6 +138,7 @@ function getApiKey() {
     const matches = inputText.match(regex);
     if(matches) {
         const outputText = matches.join('\n');
+        console.log(outputText);
         const blob = new Blob([outputText], {type: 'text/plain'});
         const a = document.createElement('a');
         a.download = new Date().toISOString() + '-apikey.txt';

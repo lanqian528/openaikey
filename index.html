@@ -29,11 +29,13 @@
       <textarea id="apiKeyInput" placeholder="请输入要查询的apikey或用session，全部丢进来就行，自动识别，无视格式和数量(任何带有sk-或sess-的文本)"></textarea>
       <div>
         <input type="checkbox" id="showFullApiKey" />
-        <label for="showFullApiKey">完整APIKEY</label>
+        <label for="showFullApiKey">右侧显示完整APIKEY</label>
       </div>
       <div>
         <button onclick="sendCurlRequests()">查询api</button>
         <button onclick="getApiKey()">提取key</button>
+        <button onclick="getSessKey()">提取sess</button>
+<!--        <button onclick="getAccToken()">提取token</button>-->
       </div>
     </div>
     <h3>需要低价账号来LQ小店<a href="https://fk.lqqq.ltd" target="_blank">点击此处</a></h3>
@@ -49,7 +51,7 @@
             <th>已用额度</th>
             <th>剩余额度</th>
             <th>到期时间</th>
-            <th>绑卡</th>
+            <th>快速</th>
             <th>先用后付</th>
             <th>GPT4</th>
           </tr>

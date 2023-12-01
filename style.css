@@ -39,15 +39,15 @@ table {
     border: 0;
     /*border-collapse: collapse;*/
     /*border-spacing: 0;*/
-    border-radius: 20px;
+    border-radius: 10px;
     overflow: hidden;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0);
 }
 
 select {
     margin: 20px;
     padding: 10px;
-    border-radius: 20px;
+    border-radius: 10px;
     border: 1px solid #ccc;
     width: 350px;
     height: 60px;
@@ -70,7 +70,7 @@ button {
     border-radius: 10px;
     font-size: 18px;
     border: none;
-    margin: 20px;
+    margin: 20px 5px;
     cursor: pointer;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
 }
@@ -83,17 +83,25 @@ tbody {
 td {
     border: 1px solid #eee;
     padding: 10px;
-    height: 40px;
+    height: 10px;
     width: auto;
     font-size: 16px;
 }
 
 tr:last-child td:first-child {
-    border-bottom-left-radius: 20px;
+    border-bottom-left-radius: 10px;
 }
 
 tr:last-child td:last-child {
-    border-bottom-right-radius: 20px;
+    border-bottom-right-radius: 10px;
+}
+
+th:first-child {
+    border-top-left-radius: 10px;
+}
+
+th:last-child {
+    border-top-right-radius: 10px;
 }
 
 th {
@@ -101,22 +109,15 @@ th {
     font-weight: bold;
     width: auto;
     padding: 10px;
-    height: 40px;
+    height: 30px;
     font-size: 16px;
 }
 
-#apiKeyInput {
+#apiKeyInput, #userInput {
     width: 350px;
     height: 400px;
     padding: 10px;
     font-size: 14px;
-    border-radius: 20px;
+    border-radius: 10px;
 }
 
-#userInput {
-    width: 350px;
-    height: 400px;
-    padding: 10px;
-    font-size: 14px;
-    border-radius: 20px;
-}

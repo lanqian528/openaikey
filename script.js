@@ -38,8 +38,8 @@ function getDateRange() {
 }
 
 function sendCurlRequest(apiUrl, apiKey, rowIndex) {
-    const data = getDateRange();
-    const usage = `${apiUrl}/dashboard/billing/usage${data}`;
+    // const data = getDateRange();
+    const credit_grants = `${apiUrl}/dashboard/billing/credit_grants`;
     const subscription = `${apiUrl}/dashboard/billing/subscription`;
     const modelsUrl = `${apiUrl}/v1/models`;
 
@@ -50,7 +50,7 @@ function sendCurlRequest(apiUrl, apiKey, rowIndex) {
         }
     };
 
-    const request1 = fetch(usage, options)
+    const request1 = fetch(credit_grants, options)
         .then(response => {
             if (!response.ok) {
                 return response.json().then((error) => {
@@ -74,25 +74,30 @@ function sendCurlRequest(apiUrl, apiKey, rowIndex) {
         });
 }
 
-function displayResult(rowIndex, apiKey, usage, subscription, models) {
+function displayResult(rowIndex, apiKey, credit_grants, subscription, models) {
     const row = resultTable.rows[rowIndex];
-    const totalUsed = (usage.total_usage / 100).toFixed(4);
-    const total = subscription.hard_limit_usd.toFixed(4);
-    const totalAvailable = (total - totalUsed).toFixed(4);
+    const totalGranted = credit_grants.total_granted;
+    const totalUsed = credit_grants.total_used;
+    const totalAvailable = credit_grants.total_available;
     const expiresAt = formatDate(subscription.access_until);
-    const hasPaymentMethod = subscription.has_payment_method ? '✔️' : '❌';
+    const ispayg = (subscription.plan.id === "payg") ? '✔️' : '❌';
     const isOldAccount = (subscription.billing_mechanism === "advance") || (!subscription.has_payment_method) ? '❌' : '✔️';
     const showFullApiKey = document.getElementById("showFullApiKey").checked;
     let availableModel = '❌';
     models.data.forEach((model) => {
         if (model.id.includes('gpt-4')) {
-            availableModel = '✔️';
+            availableModel = '✔️(8k)';
+        }
+    });
+    models.data.forEach((model) => {
+        if (model.id.includes('gpt-4-32k')) {
+            availableModel = '✔️(32k)';
         }
     });
     if (!showFullApiKey) {
         apiKey = apiKey.slice(0, 8) + '****' + apiKey.slice(-6);
     }
-    [apiKey, total, totalUsed, totalAvailable, expiresAt, hasPaymentMethod, isOldAccount, availableModel].forEach((text, index) => {
+    [apiKey, totalGranted, totalUsed, totalAvailable, expiresAt, ispayg, isOldAccount, availableModel].forEach((text, index) => {
         row.cells[index].innerText = text;
     });
 }
@@ -104,11 +109,11 @@ function displayError(rowIndex, error) {
     if (error.message.includes("must be made with a session key")) {
         errorMessage = "✔️";
     } else if (error.message.includes("Incorrect API key provided")) {
-        errorMessage = "api-key错误，请检查其有效性";
+        errorMessage = "apikey错误，请检查其有效性";
     } else if (error.message.includes("deactivated")) {
         errorMessage = "该openai账号已被封禁";
     } else {
-        errorMessage = "api请求无响应，请检查其有效性或网络情况";
+        errorMessage = "请求无响应，请检查网络";
     }
 
     row.cells[0].innerText = apiKey;
@@ -139,9 +144,42 @@ function getApiKey() {
     if(matches) {
         const outputText = matches.join('\n');
         console.log(outputText);
+        const length = matches.length;
         const blob = new Blob([outputText], {type: 'text/plain'});
         const a = document.createElement('a');
-        a.download = new Date().toISOString() + '-apikey.txt';
+        a.download = 'apikey提取-' + length + '.txt';
+        a.href = URL.createObjectURL(blob);
+        a.click();
+    }
+}
+
+function getSessKey() {
+    const inputText = document.getElementById("apiKeyInput").value;
+    const regex = /sess-[A-Za-z0-9]{40}/g;
+    const matches = inputText.match(regex);
+    if(matches) {
+        const outputText = matches.join('\n');
+        console.log(outputText);
+        const length = matches.length;
+        const blob = new Blob([outputText], {type: 'text/plain'});
+        const a = document.createElement('a');
+        a.download = 'sess提取-' + length + '.txt';
+        a.href = URL.createObjectURL(blob);
+        a.click();
+    }
+}
+
+function getAccToken() {
+    const inputText = document.getElementById("apiKeyInput").value;
+    const regex = /eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Ik1UaEVOVUpHTkVNMVFURTRNMEZCTWpkQ05UZzVNRFUxUlRVd1FVSkRNRU13UmtGRVFrRXpSZyJ9.*(?=\n)/g;
+    const matches = inputText.match(regex);
+    if(matches) {
+        const outputText = matches.join('\n');
+        const length = matches.length;
+        console.log(outputText);
+        const blob = new Blob([outputText], {type: 'text/plain'});
+        const a = document.createElement('a');
+        a.download = 'acesstoken提取-' + length + '.txt';
         a.href = URL.createObjectURL(blob);
         a.click();
     }

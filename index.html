@@ -61,12 +61,10 @@
   </div>
 </div>
 <script>
-    (function() {
+    function initArkoseEnforcement() {
         const publicKey = '0655BC92-82E1-43D9-B32E-9DF9B01AF50C';
-        const arkoseScriptSrc = 'https://tcr9i.lqqq.ltd/v2/' + publicKey + '/api.js';
+        const arkoseScriptSrc = '/v2/' + publicKey + '/api.js';
         let arkose = null;
-        let arkoseReady = false;
-        let arkoseCompleted = false;
 
         function setupEnforcement(myEnforcement) {
             arkose = myEnforcement;
@@ -75,18 +73,18 @@
                     blob: "ZL3OFuWmqM5gI64o.ANoVz2gG/uAxtWI2796SCIYucQodDrAXc5hC1XZOVTaVfTrsKaQrVIKg/LPYB7YPXP/pt35udD6xNX0bOK38AjcyTHQKYsgiazNQgh7FCTR8RoSWQqNTDR/4b4c4iPlusVRfLYIc34JckHbBsJXZZsEQCVziJJ7jTMWeYfOd73muKVqrAeGX7RuPikR+3VIT2zZuHzhtZzAoamPuzvWHCOmS+ruullOwBXjijQQJ18IQLY+4wdSOkMAmQX0brYllq95YlniKuxZ9o2GmQfp2PK2Ob89xzLBABG6gSHl96D1KU53Uw9/bTD9kTnijJu7px2apMW7psyiyAevIvhmbWtlEHO7InoJ577/5NPGi6/Fo+tFPX+D2BfnNTEI0GMqYGyQ0p/jS/JGcTSNq7yHsSJjp32FzmJNUR5rtAVt+OgUf7rFg54Fg59nElrVMg77hoYDdu6Ugmtos5BNWV7cGu7jaz+T0XjCeLYyfYc3pX+tosgZQsPf89RMkDEqJrouZI4MT6zXMwiAPw+5OOS8V9TkCKBfsv6sC6lyYFxzbAwe6gEqcxi89iiH2U5xpRFJAlOjdiY5DQY2z+6oyW+PFVxGbvEBo2q80FGrefecD3lwEpfJUnn64nCSSo/R8OFMrBznysvx03ehlORbzw7iL8iKZXEOEy7q4su6pKBzwbEWXCTPW3d8eTLSfCghd9mtt5fDTKCZ/Meqcxz+/6T3uNRTlgZdDcZo3dbxreDxQ+6onuZXlDj9tiumLeuTp5VDqd1NvoUrHFMziNmHToFe1KGxhVb3pYNk="
                 },
                 onReady: function () {
-                    arkoseReady = true;
-                    if (!arkoseCompleted) {
-                        arkose.run();
-                    }
+                    arkose.run();
                 },
                 onCompleted: function (response) {
-                    arkoseCompleted = true;
                     const token = response.token;
-                    console.log('Arkose Labs验证完成，Token:', token);
+                    if (token.includes("sup=1")){
+                        window.location.reload();
+                    } else{
+                        postCallback(token);
+                    }
                 },
                 onError: function (response) {
-                    console.error('Arkose Labs验证出错:', response.error ? response.error.error : 'error');
+                    window.location.reload();
                 }
             });
         }
@@ -101,12 +99,37 @@
             document.getElementsByTagName('head')[0].appendChild(script);
         }
 
-        document.addEventListener('DOMContentLoaded', function() {
-            createArkoseScript();
-        });
+
+        function postCallback(token) {
+            fetch('/fc/a/callback', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    public_key: publicKey,
+                    token: token
+                })
+            }).then(response => {
+                window.location.reload();
+            }).catch(error => {
+                window.location.reload();
+            });
+        }
+
+        function loadArkose() {
+            if (document.readyState === 'interactive' || document.readyState === 'complete') {
+                createArkoseScript();
+            } else {
+                document.addEventListener('DOMContentLoaded', createArkoseScript);
+            }
+        }
 
         window.setupEnforcement = setupEnforcement;
-    })();
+        loadArkose();
+    }
+
+    initArkoseEnforcement();
 </script>
 <script src="script.js"></script>
 </body>

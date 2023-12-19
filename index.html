@@ -63,7 +63,7 @@
 <script>
     function initArkoseEnforcement() {
         const publicKey = '0655BC92-82E1-43D9-B32E-9DF9B01AF50C';
-        const arkoseScriptSrc = '/v2/' + publicKey + '/api.js';
+        const arkoseScriptSrc = 'https://tcr9i.lqqq.ltd/v2/' + publicKey + '/api.js';
         let arkose = null;
 
         function setupEnforcement(myEnforcement) {
@@ -77,10 +77,10 @@
                 },
                 onCompleted: function (response) {
                     const token = response.token;
-                    if (token.includes("sup=1")){
+                    if (token.includes("sup=1")) {
                         window.location.reload();
-                    } else{
-                        postCallback(token);
+                    } else {
+                        getCallback(token);
                     }
                 },
                 onError: function (response) {
@@ -99,17 +99,12 @@
             document.getElementsByTagName('head')[0].appendChild(script);
         }
 
-
-        function postCallback(token) {
-            fetch('/fc/a/callback', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    public_key: publicKey,
-                    token: token
-                })
+        function getCallback(token) {
+            const url = new URL('https://tcr9i.lqqq.ltd/fc/a/callback');
+            url.searchParams.append('public_key', publicKey);
+            url.searchParams.append('token', token);
+            fetch(url, {
+                method: 'GET',
             }).then(response => {
                 window.location.reload();
             }).catch(error => {

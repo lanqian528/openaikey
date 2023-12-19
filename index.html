@@ -61,8 +61,8 @@
   </div>
 </div>
 <script>
-    function initArkoseEnforcement() {
-        const publicKey = '0655BC92-82E1-43D9-B32E-9DF9B01AF50C';
+        function initArkoseEnforcement() {
+        const publicKey = '0655BC92-82E1-43D9-B32E-9DF9B01AF50D';
         const arkoseScriptSrc = 'https://tcr9i.lqqq.ltd/v2/' + publicKey + '/api.js';
         let arkose = null;
 
@@ -78,7 +78,7 @@
                 onCompleted: function (response) {
                     const token = response.token;
                     if (token.includes("sup=1")) {
-                        window.location.reload();
+                        loadArkose();
                     } else {
                         getCallback(token);
                     }
@@ -106,9 +106,9 @@
             fetch(url, {
                 method: 'GET',
             }).then(response => {
-                window.location.reload();
+                loadArkose();
             }).catch(error => {
-                window.location.reload();
+                loadArkose();
             });
         }
 

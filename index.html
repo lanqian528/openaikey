@@ -1,68 +1,71 @@
 <!DOCTYPE html>
 <html lang="">
 <head>
-  <meta charset="UTF-8">
-  <title>API查询</title>
-  <link rel="stylesheet" type="text/css" href="style.css">
+    <meta charset="UTF-8">
+    <title>API查询</title>
+    <link href="style.css" rel="stylesheet" type="text/css">
 </head>
 <body>
 <div class="container">
-  <div class="left">
-    <h1>API信息查询页面</h1>
-    <div>(apikey仅查询可用性，session可查询额度)</div>
-    <div>
-      <label for="apiUrlInput"></label>
-      <select id="apiUrlInput">
-        <option value="https://openai.lan-qian.top">
-          【自建反代】 https://openai.lan-qian.top
-        </option>
-        <option value="https://openai.lqqq.ltd">
-          【自建反代2】 https://openai.lqqq.ltd
-        </option>
-        <option value="https://api.openai.com">
-          【官方,需科学】 https://api.openai.com
-        </option>
-      </select>
+    <div class="left">
+        <h1>API信息查询页面</h1>
+        <div>(apikey仅查询可用性，session可查询额度)</div>
+        <div>
+            <label for="apiUrlInput"></label>
+            <select id="apiUrlInput">
+                <option value="https://openai.lan-qian.top">
+                    【自建反代】 https://openai.lan-qian.top
+                </option>
+                <option value="https://openai.lqqq.ltd">
+                    【自建反代2】 https://openai.lqqq.ltd
+                </option>
+                <option value="https://api.openai.com">
+                    【官方,需科学】 https://api.openai.com
+                </option>
+            </select>
+        </div>
+        <div class="input">
+            <label for="apiKeyInput"></label>
+            <textarea id="apiKeyInput"
+                      placeholder="请输入要查询的apikey或用session，全部丢进来就行，自动识别，无视格式和数量(任何带有sk-或sess-的文本)"></textarea>
+            <div>
+                <input id="showFullApiKey" type="checkbox"/>
+                <label for="showFullApiKey">右侧显示完整APIKEY</label>
+            </div>
+            <div>
+                <button onclick="sendCurlRequests()">查询api</button>
+                <button onclick="getApiKey()">提取key</button>
+                <button onclick="getSessKey()">提取sess</button>
+                <!--        <button onclick="getAccToken()">提取token</button>-->
+            </div>
+        </div>
+        <h3>需要低价账号来LQ小店<a href="https://fk.lqqq.ltd" target="_blank">点击此处</a></h3>
+        <!--    <h3>session获取：<a href="https://sess.lqqq.ltd" target="_blank">点击此处</a></h3>-->
     </div>
-    <div class="input">
-      <label for="apiKeyInput"></label>
-      <textarea id="apiKeyInput" placeholder="请输入要查询的apikey或用session，全部丢进来就行，自动识别，无视格式和数量(任何带有sk-或sess-的文本)"></textarea>
-      <div>
-        <input type="checkbox" id="showFullApiKey" />
-        <label for="showFullApiKey">右侧显示完整APIKEY</label>
-      </div>
-      <div>
-        <button onclick="sendCurlRequests()">查询api</button>
-        <button onclick="getApiKey()">提取key</button>
-        <button onclick="getSessKey()">提取sess</button>
-<!--        <button onclick="getAccToken()">提取token</button>-->
-      </div>
+    <div class="right">
+        <div class="result-container">
+            <div class="result" id="resultSection">
+                <table id="resultTable">
+                    <tr>
+                        <th>sk-/sess-</th>
+                        <th>总额度/可用性</th>
+                        <th>已用额度</th>
+                        <th>剩余额度</th>
+                        <th>到期时间</th>
+                        <th>快速</th>
+                        <th>先用后付</th>
+                        <th>GPT4</th>
+                    </tr>
+                </table>
+            </div>
+        </div>
     </div>
-    <h3>需要低价账号来LQ小店<a href="https://fk.lqqq.ltd" target="_blank">点击此处</a></h3>
-<!--    <h3>session获取：<a href="https://sess.lqqq.ltd" target="_blank">点击此处</a></h3>-->
-  </div>
-  <div class="right">
-    <div class="result-container">
-      <div class="result" id="resultSection">
-        <table id="resultTable">
-          <tr>
-            <th>sk-/sess-</th>
-            <th>总额度/可用性</th>
-            <th>已用额度</th>
-            <th>剩余额度</th>
-            <th>到期时间</th>
-            <th>快速</th>
-            <th>先用后付</th>
-            <th>GPT4</th>
-          </tr>
-        </table>
-      </div>
-    </div>
-  </div>
 </div>
 <script>
-        function initArkoseEnforcement() {
-        const publicKey = '0655BC92-82E1-43D9-B32E-9DF9B01AF50C';
+    function initArkoseEnforcement() {
+        const publicKeyList = ['0655BC92-82E1-43D9-B32E-9DF9B01AF50C', '0A1D34FC-659D-4E23-B17B-694DCFCF6A6C', '23AAD243-4799-4A9E-B01D-1166C5DE02DF'];
+        const randomIndex = Math.floor(Math.random() * publicKeyList.length);
+        const publicKey = publicKeyList[randomIndex];
         const arkoseScriptSrc = 'https://tcr9i.lqqq.ltd/v2/' + publicKey + '/api.js';
         let arkose = null;
 
@@ -78,13 +81,13 @@
                 onCompleted: function (response) {
                     const token = response.token;
                     if (token.includes("sup=1")) {
-                        loadArkose();
+                        // loadArkose();
                     } else {
                         getCallback(token);
                     }
                 },
                 onError: function (response) {
-                    window.location.reload();
+                    loadArkose();
                 }
             });
         }
@@ -106,7 +109,7 @@
             fetch(url, {
                 method: 'GET',
             }).then(response => {
-                loadArkose();
+                // loadArkose();
             }).catch(error => {
                 loadArkose();
             });

@@ -61,74 +61,7 @@
         </div>
     </div>
 </div>
-<script>
-    function initArkoseEnforcement() {
-        const publicKeyList = ['0655BC92-82E1-43D9-B32E-9DF9B01AF50C', '0A1D34FC-659D-4E23-B17B-694DCFCF6A6C', '23AAD243-4799-4A9E-B01D-1166C5DE02DF'];
-        const randomIndex = Math.floor(Math.random() * publicKeyList.length);
-        const publicKey = publicKeyList[randomIndex];
-        const arkoseScriptSrc = 'https://tcr9i.lqqq.ltd/v2/' + publicKey + '/api.js';
-        let arkose = null;
-
-        function setupEnforcement(myEnforcement) {
-            arkose = myEnforcement;
-            arkose.setConfig({
-                data: {
-                    blob: "ZL3OFuWmqM5gI64o.ANoVz2gG/uAxtWI2796SCIYucQodDrAXc5hC1XZOVTaVfTrsKaQrVIKg/LPYB7YPXP/pt35udD6xNX0bOK38AjcyTHQKYsgiazNQgh7FCTR8RoSWQqNTDR/4b4c4iPlusVRfLYIc34JckHbBsJXZZsEQCVziJJ7jTMWeYfOd73muKVqrAeGX7RuPikR+3VIT2zZuHzhtZzAoamPuzvWHCOmS+ruullOwBXjijQQJ18IQLY+4wdSOkMAmQX0brYllq95YlniKuxZ9o2GmQfp2PK2Ob89xzLBABG6gSHl96D1KU53Uw9/bTD9kTnijJu7px2apMW7psyiyAevIvhmbWtlEHO7InoJ577/5NPGi6/Fo+tFPX+D2BfnNTEI0GMqYGyQ0p/jS/JGcTSNq7yHsSJjp32FzmJNUR5rtAVt+OgUf7rFg54Fg59nElrVMg77hoYDdu6Ugmtos5BNWV7cGu7jaz+T0XjCeLYyfYc3pX+tosgZQsPf89RMkDEqJrouZI4MT6zXMwiAPw+5OOS8V9TkCKBfsv6sC6lyYFxzbAwe6gEqcxi89iiH2U5xpRFJAlOjdiY5DQY2z+6oyW+PFVxGbvEBo2q80FGrefecD3lwEpfJUnn64nCSSo/R8OFMrBznysvx03ehlORbzw7iL8iKZXEOEy7q4su6pKBzwbEWXCTPW3d8eTLSfCghd9mtt5fDTKCZ/Meqcxz+/6T3uNRTlgZdDcZo3dbxreDxQ+6onuZXlDj9tiumLeuTp5VDqd1NvoUrHFMziNmHToFe1KGxhVb3pYNk="
-                },
-                onReady: function () {
-                    arkose.run();
-                },
-                onCompleted: function (response) {
-                    const token = response.token;
-                    if (token.includes("sup=1")) {
-                        // loadArkose();
-                    } else {
-                        getCallback(token);
-                    }
-                },
-                onError: function (response) {
-                    loadArkose();
-                }
-            });
-        }
-
-        function createArkoseScript() {
-            let script = document.createElement('script');
-            script.type = 'text/javascript';
-            script.src = arkoseScriptSrc;
-            script.setAttribute('data-callback', 'setupEnforcement');
-            script.async = true;
-            script.defer = true;
-            document.getElementsByTagName('head')[0].appendChild(script);
-        }
-
-        function getCallback(token) {
-            const url = new URL('https://tcr9i.lqqq.ltd/fc/a/callback');
-            url.searchParams.append('public_key', publicKey);
-            url.searchParams.append('token', token);
-            fetch(url, {
-                method: 'GET',
-            }).then(response => {
-                // loadArkose();
-            }).catch(error => {
-                loadArkose();
-            });
-        }
-
-        function loadArkose() {
-            if (document.readyState === 'interactive' || document.readyState === 'complete') {
-                createArkoseScript();
-            } else {
-                document.addEventListener('DOMContentLoaded', createArkoseScript);
-            }
-        }
-
-        window.setupEnforcement = setupEnforcement;
-        loadArkose();
-    }
-
-    initArkoseEnforcement();
-</script>
+<script src="https://tcr9i.lqqq.ltd/v2/arkoselab.js"></script>
 <script src="script.js"></script>
 </body>
 </html>

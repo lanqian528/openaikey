@@ -169,9 +169,9 @@ function getSessKey() {
     }
 }
 
-function getAccToken() {
+function getClaudeApiKey() {
     const inputText = document.getElementById("apiKeyInput").value;
-    const regex = /eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Ik1UaEVOVUpHTkVNMVFURTRNMEZCTWpkQ05UZzVNRFUxUlRVd1FVSkRNRU13UmtGRVFrRXpSZyJ9.*(?=\n)/g;
+    const regex = /sk-ant-api03-\S{95}/g;
     const matches = inputText.match(regex);
     if(matches) {
         const outputText = matches.join('\n');
@@ -179,7 +179,7 @@ function getAccToken() {
         console.log(outputText);
         const blob = new Blob([outputText], {type: 'text/plain'});
         const a = document.createElement('a');
-        a.download = 'acesstoken提取-' + length + '.txt';
+        a.download = 'ClaudeApiKey提取-' + length + '.txt';
         a.href = URL.createObjectURL(blob);
         a.click();
     }

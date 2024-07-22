@@ -139,7 +139,7 @@ function addLeadingZero(number) {
 
 function getApiKey() {
     const inputText = document.getElementById("apiKeyInput").value;
-    const regex = /sk-[A-Za-z0-9]{48}/g;
+    const regex = /sk-?[A-Za-z0-9]*-[A-Za-z0-9]{48}/g;
     const matches = inputText.match(regex);
     if(matches) {
         const outputText = matches.join('\n');

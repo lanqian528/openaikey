@@ -6,7 +6,7 @@ body {
 .container {
     display: flex;
     justify-content: space-between;
-    padding: 15px;
+    padding: 10px;
     box-sizing: border-box;
     height: 100vh;
 }
@@ -70,7 +70,7 @@ button {
     border-radius: 10px;
     font-size: 18px;
     border: none;
-    margin: 20px 5px;
+    margin: 10px 5px;
     cursor: pointer;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
 }

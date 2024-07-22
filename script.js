@@ -8,7 +8,7 @@ function sendCurlRequests() {
     }
     const apiUrl = document.getElementById("apiUrlInput").value;
     const text = document.getElementById("apiKeyInput").value;
-    const apiKeys = text.match(/(sk-[A-Za-z0-9]{48}|sess-[A-Za-z0-9]{40})/g);
+    const apiKeys = text.match(/(sk-?[A-Za-z0-9]*-[A-Za-z0-9]{48}|sess-[A-Za-z0-9]{40})/g);
     apiKeys.forEach((apiKey, index) => {
         const row = resultTable.insertRow(-1);
         sendCurlRequest(apiUrl, apiKey.trim(), index+1);
@@ -85,13 +85,8 @@ function displayResult(rowIndex, apiKey, credit_grants, subscription, models) {
     const showFullApiKey = document.getElementById("showFullApiKey").checked;
     let availableModel = '❌';
     models.data.forEach((model) => {
-        if (model.id.includes('gpt-4')) {
-            availableModel = '✔️(8k)';
-        }
-    });
-    models.data.forEach((model) => {
-        if (model.id.includes('gpt-4-32k')) {
-            availableModel = '✔️(32k)';
+        if (model.id.includes('gpt-4-turbo')) {
+            availableModel = '✔️';
         }
     });
     if (!showFullApiKey) {
